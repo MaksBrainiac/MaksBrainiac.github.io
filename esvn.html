@@ -50,11 +50,19 @@ $(function(){
         let file = $(this).data('file');
         let line = $(this).data('line');
         fetch(
-            //'http://localhost:63342/api/file/'
-            //+ encodeURIComponent(file)
             'http://localhost:63342/api/file?file=' + encodeURIComponent(file) +
-            '&line=' + encodeURIComponent(line) +
-            '&focused=true'
+            '&line=' + encodeURIComponent(line)
+        )
+        .then((response) => console.log(response));
+        //.then((data) => console.log(data));
+    });
+    $('#parsed').on("click", ".file", function ($event) {
+        $event.preventDefault();
+        let file = $(this).data('file');
+        let line = $(this).data('line');
+        fetch(
+            'http://localhost:63342/api/file?file=' + encodeURIComponent(file) +
+            '&line=' + encodeURIComponent(line)
         )
         .then((response) => console.log(response));
         //.then((data) => console.log(data));
@@ -117,7 +125,7 @@ $(function(){
         $('#parsed').empty();
         for (let i = 0; i < files.length; i++) {
             let fName = files[i];
-            let $link = $('<a target="_blank"></a>');
+            let $link = $('<a class="file"></a>');
 
             fName = fName.replace('namespace/', 'namespace.');
             $link.text(fName);
@@ -128,11 +136,11 @@ $(function(){
                 spx = fName.split(' line ');
                 fName = spx[0];
             }
-            $link.attr("href", "phpstorm://open?url=" + "file://" + encodeURIComponent("D:/Web/Files/Workspace/wl.trunk/" + fName) + '&line=' + spx[1]);
-            // phpstorm://open?url=file://%f&line=%l
-
             $('#parsed').append($link);
             $('#parsed').append('<br />');
+
+            $link.data("file", fName);
+            $link.data("line", spx[1]);
         }
     });
 });
