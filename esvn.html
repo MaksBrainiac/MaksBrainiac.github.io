@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Parse SVN Error</title>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+            background: #F7F7F7;
+            font: 20px "Segoe UI";
+        }
+        body, html {
+            height: 100%;
+        }
+        input, textarea, .x {
+            font: 16px "Segoe UI Light";
+        }
+        .all {
+
+        }
+        textarea {
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <table class="all" style="width: 1000px; margin: 0 auto; margin-top: 100px">
+        <tr>
+            0 file committed, 16 files failed to commit: wl-43950: Add new toggle ‘Add as access group to Brivo’ in Add client group page. +review WL svn: E165001: Commit failed (details follow): svn: E165001: Commit blocked by pre-commit hook (exit code 1) with output: [namespace/Wl/trunk/Member/Group/Edit/EditApi.php line 597]: Possible read of a variable that does not exist ($a_before). [namespace/Wl/trunk/Member/Group/Edit/Test/EditApi/postWithBrivo.php:35] Property is not sorted.
+
+            <td valign="center">
+                <textarea id="input" style="width: 100%" rows="10"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top">
+                <div id="parsed">Put your svn output!</div>
+            </td>
+        </tr>
+    </table>
+
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+$(function(){
+    $('#input').on("change", function($event) {
+        let text = $(this).val().trim();
+        $(this).val(text);
+
+        let kx = text.indexOf('+review WL');
+        if (kx < 0)
+            return;
+
+        text = text.substring(0, kx - 2) + "\n" + text.substring(kx);
+        $(this).val(text);
+
+        let err = 'svn: E165001';
+        let kE = 0;
+        while (true) {
+            kE = text.indexOf(err, kE + 1);
+            if (kE < 0)
+                break;
+
+            text = text.substring(0, kE - 1) + "\n" + text.substring(kE);
+        }
+        $(this).val(text);
+
+        let txt = 'with output:';
+        let k0 = text.indexOf(txt);
+
+        if (k0 < 0)
+            return;
+        k0 += txt.length;
+
+        text = text.substring(0, k0) + "\n\n" + text.substring(k0);
+        $(this).val(text);
+
+        kE = text.indexOf(txt) + txt.length + 3;
+        // text = text.substring(0, kE);
+        // $(this).val(text);
+        // return;;
+
+        let files = [];
+
+        while (true) {
+            kE = text.indexOf('[', kE);
+            // console.info(kE);
+            if (kE < 0)
+                break;
+
+            let kEx = text.indexOf(']', kE);
+            let file = text.substring(kE + 1, kEx);
+            files.push(file);
+            // console.info(file, files);
+
+            text = text.substring(0, kE) + "\n" + text.substring(kE);
+            $(this).val(text);
+            kE += 4;
+        }
+
+        $('#parsed').empty();
+        for (let i = 0; i < files.length; i++) {
+            let fName = files[i];
+            let $link = $('<a target="_blank"></a>');
+
+            fName = fName.replace('namespace/', 'namespace.');
+            $link.text(fName);
+
+            let spx = fName.split(':');
+            fName = spx[0];
+            if (spx.length === 1) {
+                spx = fName.split(' line ');
+                fName = spx[0];
+            }
+            $link.attr("href", "phpstorm://open?url=" + "file://" + encodeURIComponent("D:/Web/Files/Workspace/wl.trunk/" + fName) + '&line=' + spx[1]);
+            // phpstorm://open?url=file://%f&line=%l
+
+            $('#parsed').append($link);
+            $('#parsed').append('<br />');
+        }
+    });
+});
+
+</script>
+
+</body>
+</html>
