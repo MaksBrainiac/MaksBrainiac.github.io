@@ -125,10 +125,11 @@ $(function(){
         $('#parsed').empty();
         for (let i = 0; i < files.length; i++) {
             let fName = files[i];
-            let $link = $('<a class="file"></a>');
+            let $link = $('<a href="#" class="file"></a>');
 
-            fName = fName.replace('namespace/trunk/', 'namespace.');
-            fName = fName.replace('namespace/stable/', 'namespace.');
+            fName = fName.replace('namespace/', 'namespace.');
+            fName = fName.replace('/trunk/', '/');
+            fName = fName.replace('/stable/', '/');
             $link.text(fName);
 
             let spx = fName.split(':');
