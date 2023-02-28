@@ -127,7 +127,8 @@ $(function(){
             let fName = files[i];
             let $link = $('<a class="file"></a>');
 
-            fName = fName.replace('namespace/', 'namespace.');
+            fName = fName.replace('namespace/trunk/', 'namespace.');
+            fName = fName.replace('namespace/stable/', 'namespace.');
             $link.text(fName);
 
             let spx = fName.split(':');
