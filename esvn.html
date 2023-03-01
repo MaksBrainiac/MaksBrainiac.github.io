@@ -28,8 +28,6 @@
 <!--    <a href="#" data-file="sftp.php" data-line="2" class="file">TEST PHP1</a>-->
     <table class="all" style="width: 1000px; margin: 0 auto; margin-top: 100px">
         <tr>
-            0 file committed, 16 files failed to commit: wl-43950: Add new toggle ‘Add as access group to Brivo’ in Add client group page. +review WL svn: E165001: Commit failed (details follow): svn: E165001: Commit blocked by pre-commit hook (exit code 1) with output: [namespace/Wl/trunk/Member/Group/Edit/EditApi.php line 597]: Possible read of a variable that does not exist ($a_before). [namespace/Wl/trunk/Member/Group/Edit/Test/EditApi/postWithBrivo.php:35] Property is not sorted.
-
             <td valign="center">
                 <textarea id="input" style="width: 100%" rows="10"></textarea>
             </td>
@@ -58,12 +56,12 @@ $(function(){
     // });
     $('#parsed').on("click", ".file", function ($event) {
         $event.preventDefault();
+        let $link = $(this);
         $link.css({
             color: ""
         });
-        let file = $(this).data('file');
-        let line = $(this).data('line');
-        let $link = $(this);
+        let file = $link.data('file');
+        let line = $link.data('line');
         fetch(
             'http://localhost:63342/api/file?file=' + encodeURIComponent(file)
             + '&line=' + encodeURIComponent(line)
@@ -106,7 +104,7 @@ $(function(){
             return;
         k0 += txt.length;
 
-        text = text.substring(0, k0) + "\n\n" + text.substring(k0);
+        text = text.substring(0, k0) + "\n" + text.substring(k0);
         $(this).val(text);
 
         kE = text.indexOf(txt) + txt.length + 3;
