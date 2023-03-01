@@ -83,7 +83,7 @@ $(function(){
         if (kx < 0)
             return;
 
-        text = text.substring(0, kx - 2) + "\n" + text.substring(kx);
+        text = text.substring(0, kx - 1) + "\n" + text.substring(kx);
         $(this).val(text);
 
         let err = 'svn: E165001';
@@ -107,7 +107,7 @@ $(function(){
         text = text.substring(0, k0) + "\n" + text.substring(k0);
         $(this).val(text);
 
-        kE = text.indexOf(txt) + txt.length + 3;
+        kE = text.indexOf(txt) + txt.length + 2;
         // text = text.substring(0, kE);
         // $(this).val(text);
         // return;;
