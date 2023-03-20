@@ -34,6 +34,8 @@
         </tr>
         <tr>
             <td valign="top">
+                <div id="message"></div>
+                <hr />
                 <div id="parsed">Put your svn output!</div>
             </td>
         </tr>
@@ -129,6 +131,18 @@ $(function(){
             $(this).val(text);
             kE += 4;
         }
+
+        kx = text.indexOf('+review WL');
+        kx = text.indexOf("\n", kx);
+
+        let failed = 'failed to commit:';
+        let kf = text.indexOf(failed);
+        if (kf < 0)
+            return;
+
+        let message = text.substring(kf + failed.length, kx);
+        $('#message').text(message);
+        $('#message')[0].innerHTML = $('#message')[0].innerHTML.replace("\n", "<br />");
 
         $('#parsed').empty();
         for (let i = 0; i < files.length; i++) {
