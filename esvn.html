@@ -149,6 +149,7 @@ $(function(){
             let fName = files[i];
             let $link = $('<a href="#" class="file"></a>');
 
+            fName = fName.replace('reservationspot.com', '');
             fName = fName.replace('namespace/', 'namespace.');
             fName = fName.replace('/trunk/', '/');
             fName = fName.replace('/stable/', '/');
