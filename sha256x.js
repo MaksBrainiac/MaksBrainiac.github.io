@@ -5,8 +5,8 @@
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2014-2017
  * @license MIT
+ * @js-compile-no-parse
  */
-/*jslint bitwise: true */
 (function () {
   'use strict';
 
@@ -55,9 +55,13 @@
     };
   }
 
+  var debdeb = false;
+
   var createOutputMethod = function (outputType, is224) {
     return function (message) {
-      return new Sha256(is224, true).update(message)[outputType]();
+      // debdeb = message == 'demo.wellnessliving.com';
+      if (debdeb) console.warn('FOR', message, is224);
+      return new Sha256(is224, false).update(message)[outputType]();
     };
   };
 
@@ -85,7 +89,8 @@
     var algorithm = is224 ? 'sha224' : 'sha256';
     var nodeMethod = function (message) {
       if (typeof message === 'string') {
-        return crypto.createHash(algorithm).update(message, 'utf8').digest('hex');
+        // return crypto.createHash(algorithm).update(message, 'utf8').digest('hex');
+        return crypto.createHash(algorithm).update(Buffer.from(message, 'utf8')).digest('hex');
       } else {
         if (message === null || message === undefined) {
           throw new Error(ERROR);
@@ -95,7 +100,7 @@
       }
       if (Array.isArray(message) || ArrayBuffer.isView(message) ||
         message.constructor === Buffer) {
-        return crypto.createHash(algorithm).update(new Buffer(message)).digest('hex');
+        return crypto.createHash(algorithm).update(Buffer.from(message)).digest('hex');
       } else {
         return method(message);
       }
@@ -125,6 +130,8 @@
   };
 
   function Sha256(is224, sharedMemory) {
+    if (debdeb) console.info('shared', sharedMemory);
+    if (debdeb) console.info('is224', is224);
     if (sharedMemory) {
       blocks[0] = blocks[16] = blocks[1] = blocks[2] = blocks[3] =
         blocks[4] = blocks[5] = blocks[6] = blocks[7] =
@@ -166,6 +173,8 @@
       return;
     }
     var notString, type = typeof message;
+    if (debdeb) console.info('update', type);
+    if (debdeb) console.info('for', message);
     if (type !== 'string') {
       if (type === 'object') {
         if (message === null) {
@@ -183,6 +192,10 @@
       notString = true;
     }
     var code, index = 0, i, length = message.length, blocks = this.blocks;
+
+    if (debdeb) console.info('blocks[[');
+    if (debdeb) console.info(blocks, this.blocks);
+    if (debdeb) console.info(']]');
 
     while (index < length) {
       if (this.hashed) {
@@ -242,6 +255,11 @@
     if (this.finalized) {
       return;
     }
+    if (debdeb) console.info('blocks{{');
+    if (debdeb) console.info(this.blocks);
+    if (debdeb) console.info('}}');
+    if (debdeb) console.info('hashed', this.lastByteIndex, this.hashed, EXTRA);
+
     this.finalized = true;
     var blocks = this.blocks, i = this.lastByteIndex;
     blocks[16] = this.block;
@@ -266,6 +284,8 @@
     var a = this.h0, b = this.h1, c = this.h2, d = this.h3, e = this.h4, f = this.h5, g = this.h6,
       h = this.h7, blocks = this.blocks, j, s0, s1, maj, t1, t2, ch, ab, da, cd, bc;
 
+    // if (debdeb) console.info('BEFHASH', this.first, this.is224, this.h0, this.h1, this.h2, this.h3, this.h4, this.h5, this.h6, this.h7, blocks);
+
     for (j = 16; j < 64; ++j) {
       // rightrotate
       t1 = blocks[j - 15];
@@ -275,8 +295,10 @@
       blocks[j] = blocks[j - 16] + s0 + blocks[j - 7] + s1 << 0;
     }
 
+    // if (debdeb) console.info('DBGxx', a, b, c, d, e, f, g, h, blocks, j, s0, s1, maj, t1, t2, ch, ab, da, cd, bc);
+
     let zz = [];
-      
+
     bc = b & c;
     for (j = 0; j < 64; j += 4) {
       if (this.first) {
@@ -330,6 +352,10 @@
       t2 = s0 + maj;
       e = a + t1 << 0;
       a = t1 + t2 << 0;
+
+      // zz.push(
+      //   [a, b, c, d, e, f, g, h, blocks.slice(), j, s0, s1, maj, t1, t2, ch, ab, da, cd, bc]
+      // );
     }
 
     this.h0 = this.h0 + a << 0;
@@ -340,6 +366,8 @@
     this.h5 = this.h5 + f << 0;
     this.h6 = this.h6 + g << 0;
     this.h7 = this.h7 + h << 0;
+
+    // if (debdeb) console.info('AFTHASH', this.h0, this.h1, this.h2, this.h3, this.h4, this.h5, this.h6, this.h7);
   };
 
   Sha256.prototype.hex = function () {
