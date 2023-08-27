@@ -29,10 +29,14 @@ function sha256(input) {
             let res = sha256("test"); // 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
             if (res === "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08") {
                 correct++;
+                console.log(res);
             }
-            // console.log(sha256("test"));
+            else {
+                console.warn(res);
+            }
         }
-        alert("Correct: " + correct);
+        // alert("Correct: " + correct);
+        document.write(correct + "");
     </script>
 </body>
 </html>
