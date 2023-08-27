@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sha256 Test</title>
+    <script src="sha256ee.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+function sha256(input) {
+  // Create a new instance of jsSHA with the input string
+  var obj = new jsSHA('SHA-256', 'TEXT', { encoding: 'UTF8' });
+
+  // Update the instance with the input
+  obj.update(input);
+
+  // Get the hash in hexadecimal format
+  var hash = obj.getHash('HEX');
+  
+  return hash;
+}
+
+      
+        let correct = 0;
+        for (let i = 0; i < 10000; i++) {
+            let res = sha256("test"); // 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+            if (res === "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08") {
+                correct++;
+            }
+            // console.log(sha256("test"));
+        }
+        alert("Correct: " + correct);
+    </script>
+</body>
+</html>
