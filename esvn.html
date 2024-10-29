@@ -81,7 +81,7 @@ $(function(){
         let text = $(this).val().trim().split("\n").join(" ");
         $(this).val(text);
 
-        let kx = text.indexOf('+review WL');
+        let kx = text.indexOf('+review ');
         if (kx < 0)
             return;
 
@@ -132,7 +132,7 @@ $(function(){
             kE += 4;
         }
 
-        kx = text.indexOf('+review WL');
+        kx = text.indexOf('+review ');
         kx = text.indexOf("\n", kx);
 
         let failed = 'failed to commit:';
@@ -152,7 +152,7 @@ $(function(){
             fName = fName.replace('reservationspot.com', '');
             fName = fName.replace('namespace/', 'namespace.');
             fName = fName.replace('/trunk/', '/');
-            fName = fName.replace('/servers/stable/', '/');
+            fName = fName.replace('/stable/', '/');
             $link.text(fName);
 
             let spx = fName.split(':');
